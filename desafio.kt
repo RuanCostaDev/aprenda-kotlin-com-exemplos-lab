@@ -2,20 +2,58 @@
 
 enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL }
 
-class Usuario
+data class Usuario(val name: String)
 
-data class ConteudoEducacional(var nome: String, val duracao: Int = 60)
+data class ConteudoEducacional(var nome: String, val duracao: Int)
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>, val nivel: Nivel) {
+
 
     val inscritos = mutableListOf<Usuario>()
-    
-    fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+
+
+    fun matricular(nome: String) {
+        try {
+        val novoUsuario = Usuario(nome)
+        inscritos.add(novoUsuario)
+
+        } catch (e: IllegalArgumentException) {
+            println("Argumento inválido para novo de usuário!")
+            e.printStackTrace()
+        }
+    }
+
+    override fun toString(): String {
+        var retornoConteudo = ""
+        conteudos.forEach {
+            retornoConteudo += "[${it.nome}, ${it.duracao}min.]\n"
+        }
+
+        var retornoUsuario = ""
+        inscritos.forEach {
+            retornoUsuario += "[${it.name}]\n"
+        }
+        return "Formação: ${nome}\nNível: $nivel\nConteúdos: \n$retornoConteudo\nMatriculados:\n$retornoUsuario"
     }
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+    val backEndComKotlinEJava = Formacao("TQI - backend com Kotlin e Java", mutableListOf(
+        ConteudoEducacional("Conhecendo Kotlin e sua documentação", 60),
+        ConteudoEducacional("Introdução Prática à Linguagem de Programação Kotlin", 120),
+        ConteudoEducacional("Estruturas de Controle de Fluxo e Coleções em Kotlin", 120),
+        ConteudoEducacional("Orientação a Objetos e Tipos de Classes na Prática com Kotlin", 120),
+        ConteudoEducacional("O Poder das Funções em Kotlin", 120),
+        ConteudoEducacional("Tratamento de Exceções em Kotlin", 120),
+        ConteudoEducacional("Abstraindo Formações da DIO Usando Orientação a Objetos com Kotlin", 120),
+        ), Nivel.INTERMEDIARIO)
+
+
+    backEndComKotlinEJava.matricular("Ruan Costa")
+    backEndComKotlinEJava.matricular("Venilton Falvo")
+    backEndComKotlinEJava.matricular("Iglá Generoso")
+    backEndComKotlinEJava.matricular("Renan")
+
+    println(backEndComKotlinEJava)
+
 }
